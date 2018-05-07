@@ -21,6 +21,7 @@ namespace BB_Controller
         Controller controller = null;
         Guid controllerGUID = new Guid();
         State prevControllerState;
+        int[] prevStickValues = { 128, 128 };
 
         public Form1()
         {
@@ -88,9 +89,9 @@ namespace BB_Controller
             PublishMQTTMsg(strValue);
         }
 
-        private void PublishMQTTMsg(string msg)
+        private void PublishMQTTMsg(string msg, string channel = "test_channel")
         {
-            client.Publish("test_channel", Encoding.UTF8.GetBytes(msg));
+            client.Publish(channel, Encoding.UTF8.GetBytes(msg));
         }
 
         private void timerJoystickPoll_Tick(object sender, EventArgs e)
@@ -98,13 +99,42 @@ namespace BB_Controller
             State state = controller.GetState();
             if (prevControllerState.PacketNumber != state.PacketNumber)
             {
-                Console.WriteLine(state.Gamepad.Buttons);
+                //Console.WriteLine(state.Gamepad);
                 if(state.Gamepad.Buttons == GamepadButtonFlags.A)
                 {
-                    Console.WriteLine("YOU HIT THE A BUTTON!");
+                    PublishMQTTMsg("F");
                 }
+
+                // UP/DOWN
+                if(state.Gamepad.LeftThumbX != prevStickValues[0])
+                {
+                    if (state.Gamepad.LeftThumbX >= 128)
+                    {
+                        PublishMQTTMsg("U" + Map(state.Gamepad.LeftThumbX, 128, 32767, 0, 200));
+                    }
+                    else if (state.Gamepad.LeftThumbX <= 128)
+                    {
+                        PublishMQTTMsg("D" + Map(state.Gamepad.LeftThumbX, 128, 32767, 0, 200));
+                    }
+                    prevStickValues[0] = state.Gamepad.LeftThumbX;
+                }
+
+                // LEFT/RIGHT
+                if (state.Gamepad.LeftTrigger != prevStickValues[1])
+                {
+                    if (state.Gamepad.LeftTrigger < 128)
+                    {
+                        PublishMQTTMsg("L" + Map(state.Gamepad.LeftTrigger, 128, 0, 0, 200));
+                    }
+                    else if (state.Gamepad.LeftTrigger > 128)
+                    {
+                        PublishMQTTMsg("R" + Map(state.Gamepad.LeftTrigger, 128, 256, 0, 200));
+                    }
+                    prevStickValues[1] = state.Gamepad.LeftTrigger;
+                }
+
             }
-            Thread.Sleep(10);
+            //Thread.Sleep(10);
             prevControllerState = state;
         }
 
@@ -114,6 +144,11 @@ namespace BB_Controller
             {
                 client.Disconnect();
             }
+        }
+
+        private long Map(long x, long in_min, long in_max, long out_min, long out_max)
+        {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
         }
     }
 }
