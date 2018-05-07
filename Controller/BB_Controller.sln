@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controller", "Controller\Controller.csproj", "{9156856F-89FD-4883-BC12-74E74C54D915}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BB_Controller", "Controller\BB_Controller.csproj", "{9156856F-89FD-4883-BC12-74E74C54D915}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

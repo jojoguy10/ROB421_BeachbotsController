@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Controller
+namespace BB_Controller
 {
     static class Program
     {
