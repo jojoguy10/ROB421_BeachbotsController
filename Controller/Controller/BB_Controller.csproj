@@ -58,8 +58,15 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="VoIPSDK, Version=11.2.0.247, Culture=neutral, PublicKeyToken=4812fb35129b8487, processorArchitecture=MSIL">
+      <HintPath>..\packages\Onvif.IP.Camera.Viewer.11.2.0\lib\net40\VoIPSDK.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs" />
     <Compile Include="frmController.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -35,11 +35,12 @@
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnRight = new System.Windows.Forms.Button();
             this.timerJoystick = new System.Windows.Forms.Timer(this.components);
+            this.panelVideo = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // btnUp
             // 
-            this.btnUp.Location = new System.Drawing.Point(96, 43);
+            this.btnUp.Location = new System.Drawing.Point(232, 352);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(75, 23);
             this.btnUp.TabIndex = 0;
@@ -49,7 +50,7 @@
             // 
             // btnFire
             // 
-            this.btnFire.Location = new System.Drawing.Point(96, 72);
+            this.btnFire.Location = new System.Drawing.Point(232, 381);
             this.btnFire.Name = "btnFire";
             this.btnFire.Size = new System.Drawing.Size(75, 23);
             this.btnFire.TabIndex = 0;
@@ -59,7 +60,7 @@
             // 
             // btnDown
             // 
-            this.btnDown.Location = new System.Drawing.Point(96, 101);
+            this.btnDown.Location = new System.Drawing.Point(232, 410);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(75, 23);
             this.btnDown.TabIndex = 0;
@@ -69,7 +70,7 @@
             // 
             // btnLeft
             // 
-            this.btnLeft.Location = new System.Drawing.Point(15, 72);
+            this.btnLeft.Location = new System.Drawing.Point(151, 381);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(75, 23);
             this.btnLeft.TabIndex = 0;
@@ -79,7 +80,7 @@
             // 
             // btnRight
             // 
-            this.btnRight.Location = new System.Drawing.Point(177, 72);
+            this.btnRight.Location = new System.Drawing.Point(313, 381);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(75, 23);
             this.btnRight.TabIndex = 0;
@@ -92,11 +93,19 @@
             this.timerJoystick.Interval = 1;
             this.timerJoystick.Tick += new System.EventHandler(this.timerJoystickPoll_Tick);
             // 
+            // panelVideo
+            // 
+            this.panelVideo.Location = new System.Drawing.Point(107, 38);
+            this.panelVideo.Name = "panelVideo";
+            this.panelVideo.Size = new System.Drawing.Size(320, 240);
+            this.panelVideo.TabIndex = 1;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(266, 154);
+            this.ClientSize = new System.Drawing.Size(549, 454);
+            this.Controls.Add(this.panelVideo);
             this.Controls.Add(this.btnLeft);
             this.Controls.Add(this.btnDown);
             this.Controls.Add(this.btnRight);
@@ -117,6 +126,7 @@
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.Button btnRight;
         private System.Windows.Forms.Timer timerJoystick;
+        private System.Windows.Forms.Panel panelVideo;
     }
 }
 

@@ -11,6 +11,11 @@ using System.Net;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using SharpDX.XInput;
+using Onvif.IP;
+using Ozeki.Media.Video.Controls;
+using Ozeki.Media.IPCamera;
+using Ozeki.Media.MediaHandlers.Video;
+using Ozeki.Media.MediaHandlers;
 
 namespace BB_Controller
 {
@@ -23,9 +28,20 @@ namespace BB_Controller
         State prevControllerState;
         int[] prevStickValues = { 128, 128 };
 
+        private IIPCamera _camera;
+        private DrawingImageProvider _imageProvider = new DrawingImageProvider();
+        private MediaConnector _connector = new MediaConnector();
+        private VideoViewerWF _videoViewerWF1;
+
         public Form1()
         {
             InitializeComponent();
+
+            _videoViewerWF1 = new VideoViewerWF();
+            _videoViewerWF1.Name = "videoViewerWF1";
+            _videoViewerWF1.Size = panelVideo.Size;
+            panelVideo.Controls.Add(_videoViewerWF1);
+            _videoViewerWF1.SetImageProvider(_imageProvider);
 
             try
             {
@@ -51,6 +67,18 @@ namespace BB_Controller
             {
                 Console.WriteLine("No controller found!");
             }
+
+            //try
+            //{
+                _camera = IPCameraFactory.GetCamera("192.168.4.1:8081", "pi", "raspberry");
+                _connector.Connect(_camera.VideoChannel, _imageProvider);
+                _camera.Start();
+                _videoViewerWF1.Start();
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
         }
 
         private void btn_Click(object sender, EventArgs e)
