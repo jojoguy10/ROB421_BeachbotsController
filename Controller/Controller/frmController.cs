@@ -11,7 +11,6 @@ using System.Net;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using SharpDX.XInput;
-using Onvif.IP;
 using Ozeki.Media.Video.Controls;
 using Ozeki.Media.IPCamera;
 using Ozeki.Media.MediaHandlers.Video;
@@ -19,9 +18,10 @@ using Ozeki.Media.MediaHandlers;
 
 namespace BB_Controller
 {
-    public partial class Form1 : Form
+    public partial class frmController : Form
     {
-        MqttClient client = new MqttClient(IPAddress.Parse("192.168.0.104"));
+
+        MqttClient client = new MqttClient(IPAddress.Parse("192.168.4.1"));
 
         Controller controller = null;
         Guid controllerGUID = new Guid();
@@ -33,15 +33,15 @@ namespace BB_Controller
         private MediaConnector _connector = new MediaConnector();
         private VideoViewerWF _videoViewerWF1;
 
-        public Form1()
+        public frmController()
         {
             InitializeComponent();
 
-            _videoViewerWF1 = new VideoViewerWF();
-            _videoViewerWF1.Name = "videoViewerWF1";
-            _videoViewerWF1.Size = panelVideo.Size;
-            panelVideo.Controls.Add(_videoViewerWF1);
-            _videoViewerWF1.SetImageProvider(_imageProvider);
+            //_videoViewerWF1 = new VideoViewerWF();
+            //_videoViewerWF1.Name = "videoViewerWF1";
+            //_videoViewerWF1.Size = panelVideo.Size;
+            // panelVideo.Controls.Add(_videoViewerWF1);
+            //_videoViewerWF1.SetImageProvider(_imageProvider);
 
             try
             {
@@ -70,10 +70,10 @@ namespace BB_Controller
 
             //try
             //{
-                _camera = IPCameraFactory.GetCamera("192.168.4.1:8081", "pi", "raspberry");
-                _connector.Connect(_camera.VideoChannel, _imageProvider);
-                _camera.Start();
-                _videoViewerWF1.Start();
+            //_camera = IPCameraFactory.GetCamera("192.168.4.1:8081", "pi", "raspberry");
+            //_connector.Connect(_camera.VideoChannel, _imageProvider);
+            //_camera.Start();
+            //_videoViewerWF1.Start();
             //}
             //catch (Exception ex)
             //{
@@ -128,47 +128,51 @@ namespace BB_Controller
             if (prevControllerState.PacketNumber != state.PacketNumber)
             {
                 //Console.WriteLine(state.Gamepad);
-                if(state.Gamepad.Buttons == GamepadButtonFlags.A)
+                if (state.Gamepad.Buttons == GamepadButtonFlags.A)
                 {
                     PublishMQTTMsg("F");
                 }
+                
 
                 // UP/DOWN
-                if(state.Gamepad.LeftThumbX != prevStickValues[0])
+                if (state.Gamepad.Buttons == GamepadButtonFlags.DPadUp)
                 {
-                    if (state.Gamepad.LeftThumbX >= 128)
-                    {
-                        PublishMQTTMsg("U" + Map(state.Gamepad.LeftThumbX, 128, 32767, 0, 200));
-                    }
-                    else if (state.Gamepad.LeftThumbX <= 128)
-                    {
-                        PublishMQTTMsg("D" + Map(state.Gamepad.LeftThumbX, 128, 32767, 0, 200));
-                    }
-                    prevStickValues[0] = state.Gamepad.LeftThumbX;
+                    PublishMQTTMsg("D250");
+                }
+                else if (state.Gamepad.Buttons == GamepadButtonFlags.DPadDown)
+                {
+                    PublishMQTTMsg("U250");
+                }
+                else
+                {
+                    PublishMQTTMsg("D0");
+                    PublishMQTTMsg("U0");
                 }
 
+
+
                 // LEFT/RIGHT
-                if (state.Gamepad.LeftTrigger != prevStickValues[1])
-                {
-                    if (state.Gamepad.LeftTrigger < 128)
-                    {
-                        PublishMQTTMsg("L" + Map(state.Gamepad.LeftTrigger, 128, 0, 0, 200));
-                    }
-                    else if (state.Gamepad.LeftTrigger > 128)
-                    {
-                        PublishMQTTMsg("R" + Map(state.Gamepad.LeftTrigger, 128, 256, 0, 200));
-                    }
-                    prevStickValues[1] = state.Gamepad.LeftTrigger;
-                }
+                //if (state.Gamepad.LeftTrigger != prevStickValues[1])
+                //{
+                //    if (state.Gamepad.LeftTrigger < 128)
+                //    {
+                //        PublishMQTTMsg("L" + Map(state.Gamepad.LeftTrigger, 128, 0, 0, 300));
+                //    }
+                //    else if (state.Gamepad.LeftTrigger > 128)
+                //    {
+                //        PublishMQTTMsg("R" + Map(state.Gamepad.LeftTrigger, 128, 256, 0, 300));
+                //    }
+                //    prevStickValues[1] = state.Gamepad.LeftTrigger;
+                //}
 
             }
             //Thread.Sleep(10);
             prevControllerState = state;
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void frmController_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(client.IsConnected)
+            if (client.IsConnected)
             {
                 client.Disconnect();
             }
@@ -178,5 +182,6 @@ namespace BB_Controller
         {
             return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
         }
+
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace BB_Controller
 {
-    partial class Form1
+    partial class frmController
     {
         /// <summary>
         /// Required designer variable.
@@ -100,7 +100,7 @@
             this.panelVideo.Size = new System.Drawing.Size(320, 240);
             this.panelVideo.TabIndex = 1;
             // 
-            // Form1
+            // frmController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -111,9 +111,9 @@
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnFire);
             this.Controls.Add(this.btnUp);
-            this.Name = "Form1";
+            this.Name = "frmController";
             this.Text = "BeachBots Controller";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmController_FormClosing);
             this.ResumeLayout(false);
 
         }

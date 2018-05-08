@@ -47,22 +47,136 @@
 #define TEMP_0_PIN          13   // ANALOG NUMBERING
 #define TEMP_1_PIN          14   // ANALOG NUMBERING
 
-AccelStepper liftStepper(AccelStepper::DRIVER, Y_STEP_PIN, Y_DIR_PIN);
+// Stepper motors
+AccelStepper liftStepper(AccelStepper::DRIVER, X_STEP_PIN, X_DIR_PIN);
+AccelStepper shootStepper(AccelStepper::DRIVER, Y_STEP_PIN, Y_DIR_PIN);
+bool Y_MIN_LIMIT, Y_MAX_LIMIT;
 
-// the setup function runs once when you press reset or power the board
+// Photoresistor
+int photoPin = 9;
+int photoValue = 0;
+int PHOTO_THRESHOLD = 400;
+
+// Serial variables
+String data = "";
+int i = 0;
+bool stringComplete = false;
+
+// State machine variables
+int CURRENT_CASE = -1;
+
 void setup() {
+	pinMode(X_ENABLE_PIN, OUTPUT);
 	pinMode(Y_ENABLE_PIN, OUTPUT);
+	digitalWrite(X_ENABLE_PIN, LOW);
 	digitalWrite(Y_ENABLE_PIN, LOW);
 
 	Serial.begin(9600);
+	data.reserve(200);
 
-}
+	liftStepper.setMaxSpeed(300);
+	liftStepper.setAcceleration(500);
+	liftStepper.setSpeed(0);
 
-// the loop function runs over and over again until power down or reset
-void loop() {
-  
+	shootStepper.setMaxSpeed(1000);
+	shootStepper.setAcceleration(5000);
+	shootStepper.setSpeed(0);
 }
 
 void serialEvent() {
+	while (Serial.available()) {
+		char inChar = (char)Serial.read();
+		data += inChar;
+		if (inChar == '\n') {
+			stringComplete = true;
+		}
+	}
+}
 
+void loop() {
+	Y_MIN_LIMIT = digitalRead(Y_MIN_PIN);
+	Y_MAX_LIMIT = digitalRead(Y_MAX_PIN);
+	Serial.write(Y_MAX_LIMIT + '\n');
+	Serial.write(Y_MIN_LIMIT + '\n');
+
+	photoValue = analogRead(photoPin);
+
+	switch (CURRENT_CASE) {
+		// Run motor forward until limit
+		case 0:
+			shootStepper.setSpeed(-600);
+			shootStepper.runSpeed();
+			if (!Y_MAX_LIMIT) {
+				shootStepper.move(2000);
+				CURRENT_CASE++;
+			}
+			break;
+
+			// Run motor backward halfway
+		case 1:
+			shootStepper.setSpeed(600);
+			shootStepper.run();
+			if (shootStepper.distanceToGo() == 0) {
+				CURRENT_CASE++;
+			}
+			break;
+
+			// When motor is in position, wait for photoresistor
+		case 2:
+			if (photoValue > PHOTO_THRESHOLD) {
+				shootStepper.setSpeed(600);
+				CURRENT_CASE++;
+			}
+			break;
+
+			// Move motor back to minimum limit, then go back to case 0
+		case 3:
+			shootStepper.runSpeed();
+			if (!Y_MIN_LIMIT) {
+				CURRENT_CASE = -1;
+			}
+			break;
+
+		default:
+			break;
+	}
+
+	if (stringComplete) {
+		switch (data.charAt(0)) {
+			case 'U':
+				//UP
+				liftStepper.setSpeed(data.substring(1).toInt());
+				break;
+
+			case 'D':
+				//DOWN
+				liftStepper.setSpeed(-data.substring(1).toInt());
+				break;
+
+			case 'L':
+				//LEFT
+				break;
+
+			case 'R':
+				//RIGHT
+				break;
+
+			case 'F':
+				//FIRE
+				CURRENT_CASE = 0;
+				break;
+
+			case 'S':
+				//STOP
+				liftStepper.setSpeed(0);
+				break;
+
+			default:
+				break;
+		}
+		data = "";
+		stringComplete = false;
+	}
+
+	liftStepper.runSpeed();
 }
