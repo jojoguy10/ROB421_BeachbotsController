@@ -1,47 +1,25 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using uPLibrary.Networking.M2Mqtt;
-using uPLibrary.Networking.M2Mqtt.Messages;
 using SharpDX.XInput;
-using Ozeki.Media.Video.Controls;
-using Ozeki.Media.IPCamera;
-using Ozeki.Media.MediaHandlers.Video;
-using Ozeki.Media.MediaHandlers;
 
 namespace BB_Controller
 {
     public partial class frmController : Form
     {
 
-        MqttClient client = new MqttClient(IPAddress.Parse("192.168.4.1"));
+        MqttClient client = new MqttClient(IPAddress.Parse("192.168.0.104"));
 
         Controller controller = null;
         Guid controllerGUID = new Guid();
         State prevControllerState;
         int[] prevStickValues = { 128, 128 };
 
-        private IIPCamera _camera;
-        private DrawingImageProvider _imageProvider = new DrawingImageProvider();
-        private MediaConnector _connector = new MediaConnector();
-        private VideoViewerWF _videoViewerWF1;
-
         public frmController()
         {
             InitializeComponent();
-
-            //_videoViewerWF1 = new VideoViewerWF();
-            //_videoViewerWF1.Name = "videoViewerWF1";
-            //_videoViewerWF1.Size = panelVideo.Size;
-            // panelVideo.Controls.Add(_videoViewerWF1);
-            //_videoViewerWF1.SetImageProvider(_imageProvider);
 
             try
             {
@@ -67,54 +45,6 @@ namespace BB_Controller
             {
                 Console.WriteLine("No controller found!");
             }
-
-            //try
-            //{
-            //_camera = IPCameraFactory.GetCamera("192.168.4.1:8081", "pi", "raspberry");
-            //_connector.Connect(_camera.VideoChannel, _imageProvider);
-            //_camera.Start();
-            //_videoViewerWF1.Start();
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //}
-        }
-
-        private void btn_Click(object sender, EventArgs e)
-        {
-            string strValue = Convert.ToString("Hello from Visual Studio!");
-            switch (((System.Windows.Forms.Button)sender).Name)
-            {
-                case "btnUp":
-                    Console.WriteLine("Up");
-                    strValue = "Up";
-                    break;
-
-                case "btnDown":
-                    Console.WriteLine("Down");
-                    strValue = "Down";
-                    break;
-
-                case "btnLeft":
-                    Console.WriteLine("Left");
-                    strValue = "Left";
-                    break;
-
-                case "btnRight":
-                    Console.WriteLine("Right");
-                    strValue = "Right";
-                    break;
-
-                case "btnFire":
-                    Console.WriteLine("FIRE!");
-                    strValue = "FIRE!";
-                    break;
-
-                default:
-                    break;
-            }
-            PublishMQTTMsg(strValue);
         }
 
         private void PublishMQTTMsg(string msg, string channel = "test_channel")

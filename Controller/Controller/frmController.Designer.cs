@@ -29,104 +29,43 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.btnUp = new System.Windows.Forms.Button();
-            this.btnFire = new System.Windows.Forms.Button();
-            this.btnDown = new System.Windows.Forms.Button();
-            this.btnLeft = new System.Windows.Forms.Button();
-            this.btnRight = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmController));
             this.timerJoystick = new System.Windows.Forms.Timer(this.components);
-            this.panelVideo = new System.Windows.Forms.Panel();
+            this.axWindowsMediaPlayer1 = new AxWMPLib.AxWindowsMediaPlayer();
+            ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // btnUp
-            // 
-            this.btnUp.Location = new System.Drawing.Point(232, 352);
-            this.btnUp.Name = "btnUp";
-            this.btnUp.Size = new System.Drawing.Size(75, 23);
-            this.btnUp.TabIndex = 0;
-            this.btnUp.Text = "Up";
-            this.btnUp.UseVisualStyleBackColor = true;
-            this.btnUp.Click += new System.EventHandler(this.btn_Click);
-            // 
-            // btnFire
-            // 
-            this.btnFire.Location = new System.Drawing.Point(232, 381);
-            this.btnFire.Name = "btnFire";
-            this.btnFire.Size = new System.Drawing.Size(75, 23);
-            this.btnFire.TabIndex = 0;
-            this.btnFire.Text = "FIRE!";
-            this.btnFire.UseVisualStyleBackColor = true;
-            this.btnFire.Click += new System.EventHandler(this.btn_Click);
-            // 
-            // btnDown
-            // 
-            this.btnDown.Location = new System.Drawing.Point(232, 410);
-            this.btnDown.Name = "btnDown";
-            this.btnDown.Size = new System.Drawing.Size(75, 23);
-            this.btnDown.TabIndex = 0;
-            this.btnDown.Text = "Down";
-            this.btnDown.UseVisualStyleBackColor = true;
-            this.btnDown.Click += new System.EventHandler(this.btn_Click);
-            // 
-            // btnLeft
-            // 
-            this.btnLeft.Location = new System.Drawing.Point(151, 381);
-            this.btnLeft.Name = "btnLeft";
-            this.btnLeft.Size = new System.Drawing.Size(75, 23);
-            this.btnLeft.TabIndex = 0;
-            this.btnLeft.Text = "Left";
-            this.btnLeft.UseVisualStyleBackColor = true;
-            this.btnLeft.Click += new System.EventHandler(this.btn_Click);
-            // 
-            // btnRight
-            // 
-            this.btnRight.Location = new System.Drawing.Point(313, 381);
-            this.btnRight.Name = "btnRight";
-            this.btnRight.Size = new System.Drawing.Size(75, 23);
-            this.btnRight.TabIndex = 0;
-            this.btnRight.Text = "Right";
-            this.btnRight.UseVisualStyleBackColor = true;
-            this.btnRight.Click += new System.EventHandler(this.btn_Click);
             // 
             // timerJoystick
             // 
             this.timerJoystick.Interval = 1;
             this.timerJoystick.Tick += new System.EventHandler(this.timerJoystickPoll_Tick);
             // 
-            // panelVideo
+            // axWindowsMediaPlayer1
             // 
-            this.panelVideo.Location = new System.Drawing.Point(107, 38);
-            this.panelVideo.Name = "panelVideo";
-            this.panelVideo.Size = new System.Drawing.Size(320, 240);
-            this.panelVideo.TabIndex = 1;
+            this.axWindowsMediaPlayer1.Enabled = true;
+            this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(53, 80);
+            this.axWindowsMediaPlayer1.Name = "axWindowsMediaPlayer1";
+            this.axWindowsMediaPlayer1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer1.OcxState")));
+            this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(380, 299);
+            this.axWindowsMediaPlayer1.TabIndex = 0;
             // 
             // frmController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(549, 454);
-            this.Controls.Add(this.panelVideo);
-            this.Controls.Add(this.btnLeft);
-            this.Controls.Add(this.btnDown);
-            this.Controls.Add(this.btnRight);
-            this.Controls.Add(this.btnFire);
-            this.Controls.Add(this.btnUp);
+            this.Controls.Add(this.axWindowsMediaPlayer1);
             this.Name = "frmController";
             this.Text = "BeachBots Controller";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmController_FormClosing);
+            ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnUp;
-        private System.Windows.Forms.Button btnFire;
-        private System.Windows.Forms.Button btnDown;
-        private System.Windows.Forms.Button btnLeft;
-        private System.Windows.Forms.Button btnRight;
         private System.Windows.Forms.Timer timerJoystick;
-        private System.Windows.Forms.Panel panelVideo;
+        private AxWMPLib.AxWindowsMediaPlayer axWindowsMediaPlayer1;
     }
 }
 
