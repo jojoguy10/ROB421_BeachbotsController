@@ -10,7 +10,7 @@ namespace BB_Controller
     public partial class frmController : Form
     {
 
-        MqttClient client = new MqttClient(IPAddress.Parse("192.168.0.104"));
+        MqttClient client = new MqttClient(IPAddress.Parse("192.168.4.1"));
 
         Controller controller = null;
         Guid controllerGUID = new Guid();
@@ -57,7 +57,7 @@ namespace BB_Controller
             State state = controller.GetState();
             if (prevControllerState.PacketNumber != state.PacketNumber)
             {
-                //Console.WriteLine(state.Gamepad);
+                Console.WriteLine(state.Gamepad);
                 if (state.Gamepad.Buttons == GamepadButtonFlags.A)
                 {
                     PublishMQTTMsg("F");
@@ -67,11 +67,11 @@ namespace BB_Controller
                 // UP/DOWN
                 if (state.Gamepad.Buttons == GamepadButtonFlags.DPadUp)
                 {
-                    PublishMQTTMsg("D250");
+                    PublishMQTTMsg("U250");
                 }
                 else if (state.Gamepad.Buttons == GamepadButtonFlags.DPadDown)
                 {
-                    PublishMQTTMsg("U250");
+                    PublishMQTTMsg("D250");
                 }
                 else
                 {

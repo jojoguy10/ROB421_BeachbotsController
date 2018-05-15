@@ -129,7 +129,7 @@ void loop() {
 			}
 			break;
 
-			// Move motor back to minimum limit, then go back to case 0
+			// Move motor back to minimum limit, then go back to case -1 (an impossible case)
 		case 3:
 			shootStepper.runSpeed();
 			if (!Y_MIN_LIMIT) {
