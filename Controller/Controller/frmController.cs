@@ -62,6 +62,11 @@ namespace BB_Controller
                 {
                     PublishMQTTMsg("F");
                 }
+
+                if (state.Gamepad.Buttons == GamepadButtonFlags.B)
+                {
+                    PublishMQTTMsg("S");
+                }
                 
 
                 // UP/DOWN
@@ -83,16 +88,28 @@ namespace BB_Controller
 
                 // LEFT/RIGHT
                 //if (state.Gamepad.LeftTrigger != prevStickValues[1])
-                //{
-                //    if (state.Gamepad.LeftTrigger < 128)
-                //    {
-                //        PublishMQTTMsg("L" + Map(state.Gamepad.LeftTrigger, 128, 0, 0, 300));
-                //    }
-                //    else if (state.Gamepad.LeftTrigger > 128)
-                //    {
-                //        PublishMQTTMsg("R" + Map(state.Gamepad.LeftTrigger, 128, 256, 0, 300));
-                //    }
-                //    prevStickValues[1] = state.Gamepad.LeftTrigger;
+                if (state.Gamepad.Buttons == GamepadButtonFlags.DPadLeft)
+                {
+                    //if (state.Gamepad.LeftTrigger < 128)
+                    //{
+                    //    //PublishMQTTMsg("L" + Map(state.Gamepad.LeftTrigger, 128, 0, 0, 300));
+                    //}
+                    //else if (state.Gamepad.LeftTrigger > 128)
+                    //{
+                    //    //PublishMQTTMsg("R" + Map(state.Gamepad.LeftTrigger, 128, 256, 0, 300));
+                    //}
+                    PublishMQTTMsg("L50");
+                }
+                else if (state.Gamepad.Buttons == GamepadButtonFlags.DPadRight)
+                {
+                    PublishMQTTMsg("R50");
+                }
+                else
+                {
+                    PublishMQTTMsg("L0");
+                    PublishMQTTMsg("R0");
+                }
+                    //prevStickValues[1] = state.Gamepad.LeftTrigger;
                 //}
 
             }

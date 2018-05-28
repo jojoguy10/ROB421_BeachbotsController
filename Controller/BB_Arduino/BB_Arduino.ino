@@ -50,6 +50,7 @@
 // Stepper motors
 AccelStepper liftStepper(AccelStepper::DRIVER, X_STEP_PIN, X_DIR_PIN);
 AccelStepper shootStepper(AccelStepper::DRIVER, Y_STEP_PIN, Y_DIR_PIN);
+AccelStepper turnStepper(AccelStepper::DRIVER, Z_STEP_PIN, Z_DIR_PIN);
 bool Y_MIN_LIMIT, Y_MAX_LIMIT;
 
 // Photoresistor
@@ -63,13 +64,16 @@ int i = 0;
 bool stringComplete = false;
 
 // State machine variables
-int CURRENT_CASE = -1;
+int CURRENT_CASE = 0;
+bool FIRE = false;
 
 void setup() {
 	pinMode(X_ENABLE_PIN, OUTPUT);
 	pinMode(Y_ENABLE_PIN, OUTPUT);
+	pinMode(Z_ENABLE_PIN, OUTPUT);
 	digitalWrite(X_ENABLE_PIN, LOW);
 	digitalWrite(Y_ENABLE_PIN, LOW);
+	digitalWrite(Z_ENABLE_PIN, LOW);
 
 	Serial.begin(9600);
 	data.reserve(200);
@@ -81,6 +85,10 @@ void setup() {
 	shootStepper.setMaxSpeed(1000);
 	shootStepper.setAcceleration(5000);
 	shootStepper.setSpeed(0);
+
+	turnStepper.setMaxSpeed(1000);
+	turnStepper.setAcceleration(5000);
+	turnStepper.setSpeed(0);
 }
 
 void serialEvent() {
@@ -96,11 +104,10 @@ void serialEvent() {
 void loop() {
 	Y_MIN_LIMIT = digitalRead(Y_MIN_PIN);
 	Y_MAX_LIMIT = digitalRead(Y_MAX_PIN);
-	Serial.write(Y_MAX_LIMIT + '\n');
-	Serial.write(Y_MIN_LIMIT + '\n');
 
 	photoValue = analogRead(photoPin);
 
+	// "Shoot" state machine
 	switch (CURRENT_CASE) {
 		// Run motor forward until limit
 		case 0:
@@ -123,7 +130,7 @@ void loop() {
 
 			// When motor is in position, wait for photoresistor
 		case 2:
-			if (photoValue > PHOTO_THRESHOLD) {
+			if (photoValue > PHOTO_THRESHOLD && FIRE) {
 				shootStepper.setSpeed(600);
 				CURRENT_CASE++;
 			}
@@ -133,7 +140,8 @@ void loop() {
 		case 3:
 			shootStepper.runSpeed();
 			if (!Y_MIN_LIMIT) {
-				CURRENT_CASE = -1;
+				FIRE = false;
+				CURRENT_CASE = 0;
 			}
 			break;
 
@@ -155,20 +163,23 @@ void loop() {
 
 			case 'L':
 				//LEFT
+				turnStepper.setSpeed(-data.substring(1).toInt());
 				break;
 
 			case 'R':
 				//RIGHT
+				turnStepper.setSpeed(data.substring(1).toInt());
 				break;
 
 			case 'F':
 				//FIRE
-				CURRENT_CASE = 0;
+				FIRE = true;
 				break;
 
 			case 'S':
 				//STOP
 				liftStepper.setSpeed(0);
+				turnStepper.setSpeed(0);
 				break;
 
 			default:
@@ -179,4 +190,5 @@ void loop() {
 	}
 
 	liftStepper.runSpeed();
+	turnStepper.runSpeed();
 }
