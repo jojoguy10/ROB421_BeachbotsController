@@ -130,7 +130,7 @@ void loop() {
 
 			// When motor is in position, wait for photoresistor
 		case 2:
-			if (photoValue > PHOTO_THRESHOLD && FIRE) {
+			if (FIRE) {
 				shootStepper.setSpeed(600);
 				CURRENT_CASE++;
 			}
